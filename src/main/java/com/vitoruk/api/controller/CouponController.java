@@ -13,7 +13,7 @@ import java.util.UUID;
 @RequestMapping("/api/coupon")
 public class CouponController {
     @Autowired
-    CouponService couponService;
+    private CouponService couponService;
 
     @PostMapping("/event/{event-id}")
     public ResponseEntity<Coupon> addCouponsToEvent(@PathVariable UUID eventId, @RequestBody CouponRequestDTO data) {

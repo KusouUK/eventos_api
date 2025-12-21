@@ -6,8 +6,6 @@ import com.vitoruk.api.domain.event.Event;
 import com.vitoruk.api.repositories.CouponRepository;
 import com.vitoruk.api.repositories.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.Date;
 import java.util.UUID;
