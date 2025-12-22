@@ -2,6 +2,7 @@ package com.vitoruk.api.controller;
 
 import com.vitoruk.api.domain.coupon.Coupon;
 import com.vitoruk.api.domain.coupon.CouponRequestDTO;
+import com.vitoruk.api.domain.coupon.CouponResponseDTO;
 import com.vitoruk.api.service.CouponService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,8 +17,8 @@ public class CouponController {
     private CouponService couponService;
 
     @PostMapping("/event/{eventId}")
-    public ResponseEntity<Coupon> addCouponsToEvent(@PathVariable UUID eventId, @RequestBody CouponRequestDTO data) {
-        Coupon coupons = couponService.addCouponToEvent(eventId, data);
+    public ResponseEntity<CouponResponseDTO> addCouponsToEvent(@PathVariable UUID eventId, @RequestBody CouponRequestDTO data) {
+        CouponResponseDTO coupons = couponService.addCouponToEvent(eventId, data);
         return ResponseEntity.ok(coupons);
     }
 }

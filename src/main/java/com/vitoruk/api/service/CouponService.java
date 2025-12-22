@@ -2,6 +2,7 @@ package com.vitoruk.api.service;
 
 import com.vitoruk.api.domain.coupon.Coupon;
 import com.vitoruk.api.domain.coupon.CouponRequestDTO;
+import com.vitoruk.api.domain.coupon.CouponResponseDTO;
 import com.vitoruk.api.domain.event.Event;
 import com.vitoruk.api.repositories.CouponRepository;
 import com.vitoruk.api.repositories.EventRepository;
@@ -20,7 +21,7 @@ public class CouponService {
     private final CouponRepository couponRepository;
     private final EventRepository eventRepository;
 
-    public Coupon addCouponToEvent(UUID eventId, CouponRequestDTO data) {
+    public CouponResponseDTO addCouponToEvent(UUID eventId, CouponRequestDTO data) {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new IllegalArgumentException("Event not found"));
 
@@ -32,7 +33,22 @@ public class CouponService {
 
         couponRepository.save(coupon);
 
-        return coupon;
+        return new CouponResponseDTO(
+            coupon.getCode(),
+            coupon.getDiscount(),
+            coupon.getValid(),
+            new CouponResponseDTO.EventDTO(
+                    coupon.getEvent().getId(),
+                    coupon.getEvent().getTitle(),
+                    coupon.getEvent().getDescription(),
+                    coupon.getEvent().getDate(),
+                    coupon.getEvent().getAddress() != null ? coupon.getEvent().getAddress().getCity() : "",
+                    coupon.getEvent().getAddress() != null ? coupon.getEvent().getAddress().getUf() : "",
+                    coupon.getEvent().getRemote(),
+                    coupon.getEvent().getEventUrl(),
+                    coupon.getEvent().getImgUrl()
+            )
+        );
     }
 
     public List<Coupon> consultCoupons(UUID eventId, Date currentDate) {
