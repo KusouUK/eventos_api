@@ -1,6 +1,5 @@
 package com.vitoruk.api.controller;
 
-import com.vitoruk.api.domain.coupon.Coupon;
 import com.vitoruk.api.domain.coupon.CouponRequestDTO;
 import com.vitoruk.api.domain.coupon.CouponResponseDTO;
 import com.vitoruk.api.service.CouponService;
