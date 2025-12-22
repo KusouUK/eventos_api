@@ -5,20 +5,20 @@ import com.vitoruk.api.domain.coupon.CouponRequestDTO;
 import com.vitoruk.api.domain.event.Event;
 import com.vitoruk.api.repositories.CouponRepository;
 import com.vitoruk.api.repositories.EventRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class CouponService {
 
-    @Autowired
-    private CouponRepository couponRepository;
-
-    @Autowired
-    private EventRepository eventRepository;
+    private final CouponRepository couponRepository;
+    private final EventRepository eventRepository;
 
     public Coupon addCouponToEvent(UUID eventId, CouponRequestDTO data) {
         Event event = eventRepository.findById(eventId)
@@ -30,6 +30,12 @@ public class CouponService {
         coupon.setValid(new Date(data.valid()));
         coupon.setEvent(event);
 
-        return couponRepository.save(coupon);
+        couponRepository.save(coupon);
+
+        return coupon;
+    }
+
+    public List<Coupon> consultCoupons(UUID eventId, Date currentDate) {
+        return couponRepository.findByEventIdAndValidAfter(eventId, currentDate);
     }
 }

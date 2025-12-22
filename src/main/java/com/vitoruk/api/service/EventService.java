@@ -1,6 +1,8 @@
 package com.vitoruk.api.service;
 
+import com.vitoruk.api.domain.coupon.Coupon;
 import com.vitoruk.api.domain.event.Event;
+import com.vitoruk.api.domain.event.EventDetailsDTO;
 import com.vitoruk.api.domain.event.EventRequestDTO;
 import com.vitoruk.api.domain.event.EventResponseDTO;
 import com.vitoruk.api.repositories.EventRepository;
@@ -22,6 +24,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class EventService {
@@ -33,6 +36,9 @@ public class EventService {
 
     @Autowired
     private AddressService addressService;
+
+    @Autowired
+    private CouponService couponService;
 
     @Autowired
     private EventRepository eventRepository;
@@ -59,6 +65,31 @@ public class EventService {
         }
 
         return newEvent;
+    }
+
+    public EventDetailsDTO getEventDetails(UUID eventId) {
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new IllegalArgumentException("Event not found"));
+
+        List<Coupon> coupons = couponService.consultCoupons(eventId, new Date());
+
+        List<EventDetailsDTO.CouponDTO> couponDTOS = coupons.stream()
+                .map(coupon -> new EventDetailsDTO.CouponDTO(
+                        coupon.getCode(),
+                        coupon.getDiscount(),
+                        coupon.getValid()))
+                .collect(Collectors.toList());
+
+        return new EventDetailsDTO(
+                event.getId(),
+                event.getTitle(),
+                event.getDescription(),
+                event.getDate(),
+                event.getAddress() != null ? event.getAddress().getCity() : "",
+                event.getAddress() != null ? event.getAddress().getUf() : "",
+                event.getImgUrl(),
+                event.getEventUrl(),
+                couponDTOS);
     }
 
     public List<EventResponseDTO> getUpcomingEvents(int page, int size) {
