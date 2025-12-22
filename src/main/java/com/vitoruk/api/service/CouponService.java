@@ -15,11 +15,13 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
 public class CouponService {
 
-    private final CouponRepository couponRepository;
-    private final EventRepository eventRepository;
+    @Autowired
+    private CouponRepository couponRepository;
+
+    @Autowired
+    private EventRepository eventRepository;
 
     public CouponResponseDTO addCouponToEvent(UUID eventId, CouponRequestDTO data) {
         Event event = eventRepository.findById(eventId)
