@@ -137,26 +137,33 @@ public class EventService {
         String fileName = UUID.randomUUID() + "-" + multipartFile.getOriginalFilename();
 
         try {
-            File file = this.convertMultipartToFile(multipartFile);
-
             PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                     .bucket(bucketName)
                     .key(fileName)
                     .contentType(multipartFile.getContentType())
                     .build();
 
-            s3Client.putObject(putObjectRequest, RequestBody.fromFile(file));
+            System.out.println("Bucket: " + bucketName);
+            System.out.println("Region: " + System.getenv("AWS_REGION"));
+            System.out.println("AccessKey presente: " +
+                    System.getenv("AWS_ACCESS_KEY_ID"));
 
-            file.delete();
+            s3Client.putObject(
+                    putObjectRequest,
+                    RequestBody.fromInputStream(
+                            multipartFile.getInputStream(),
+                            multipartFile.getSize()
+                    )
+            );
 
             return s3Client.utilities()
                     .getUrl(builder -> builder
                             .bucket(bucketName)
                             .key(fileName))
                     .toString();
+
         } catch (Exception e) {
-            System.out.println("erro ao subir arquivo {}" + e.getMessage());
-            return null;
+            throw new RuntimeException("Erro ao fazer upload da imagem para o S3", e);
         }
     }
 
