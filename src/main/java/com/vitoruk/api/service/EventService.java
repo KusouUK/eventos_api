@@ -166,12 +166,4 @@ public class EventService {
             throw new RuntimeException("Erro ao fazer upload da imagem para o S3", e);
         }
     }
-
-    private File convertMultipartToFile(MultipartFile multipartFile) throws IOException {
-        File convFile = new File(Objects.requireNonNull(multipartFile.getOriginalFilename()));
-        FileOutputStream fos = new FileOutputStream(convFile);
-        fos.write(multipartFile.getBytes());
-        fos.close();
-        return convFile;
-    }
 }
