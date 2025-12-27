@@ -143,11 +143,6 @@ public class EventService {
                     .contentType(multipartFile.getContentType())
                     .build();
 
-            System.out.println("Bucket: " + bucketName);
-            System.out.println("Region: " + System.getenv("AWS_REGION"));
-            System.out.println("AccessKey presente: " +
-                    System.getenv("AWS_ACCESS_KEY_ID"));
-
             s3Client.putObject(
                     putObjectRequest,
                     RequestBody.fromInputStream(
