@@ -1,4 +1,4 @@
-package com.vitoruk.api.config;
+package com.vitoruk.api.infra.aws;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
