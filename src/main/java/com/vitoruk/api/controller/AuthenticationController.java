@@ -1,8 +1,10 @@
 package com.vitoruk.api.controller;
 
 import com.vitoruk.api.domain.user.AuthRequestDTO;
+import com.vitoruk.api.domain.user.LoginResponseDTO;
 import com.vitoruk.api.domain.user.RegisterRequestDTO;
 import com.vitoruk.api.domain.user.User;
+import com.vitoruk.api.infra.security.TokenService;
 import com.vitoruk.api.repositories.UserRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,13 +28,17 @@ public class AuthenticationController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private TokenService tokenService;
+
     @PostMapping("/login")
-    public ResponseEntity<Void> login(@RequestBody @Valid AuthRequestDTO data) {
-        var usernamePassword = new UsernamePasswordAuthenticationToken(data.login(),
-                                                                       data.password());
+    public ResponseEntity<LoginResponseDTO> login(@RequestBody @Valid AuthRequestDTO data) {
+        var usernamePassword = new UsernamePasswordAuthenticationToken(data.login(), data.password());
         var auth = this.authenticationManager.authenticate(usernamePassword);
 
-        return ResponseEntity.ok().build();
+        var token = tokenService.generateToken((User) auth.getPrincipal());
+
+        return ResponseEntity.ok(new LoginResponseDTO(token));
     }
 
     @PostMapping("/register")
